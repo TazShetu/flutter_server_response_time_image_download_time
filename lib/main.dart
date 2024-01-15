@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Time'),
         ),
-        body: Center(
+        body: const Center(
           child: ResponseTime(),
         ),
       ),
@@ -24,11 +26,13 @@ class MyApp extends StatelessWidget {
 }
 
 class ResponseTime extends StatefulWidget {
+  const ResponseTime({super.key});
+
   @override
-  _ResponseTimeState createState() => _ResponseTimeState();
+  ResponseTimeState createState() => ResponseTimeState();
 }
 
-class _ResponseTimeState extends State<ResponseTime> {
+class ResponseTimeState extends State<ResponseTime> {
   String _responseTime = '';
   String _downloadTime = '';
   Image? _image;  // Make _image nullable
@@ -41,25 +45,25 @@ class _ResponseTimeState extends State<ResponseTime> {
       children: <Widget>[
         TextField(
           controller: _controller,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            labelText: 'Enter image URL',
+            labelText: 'ENTER IMAGE URL',
           ),
         ),
         ElevatedButton(
           onPressed: _getResponseTime,
-          child: Text('Get Response Time and Download Time'),
+          child: const Text('Get Response and Download Time'),
         ),
         Text(
           _responseTime,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           _downloadTime,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -90,12 +94,14 @@ class _ResponseTimeState extends State<ResponseTime> {
       // Measure response time
       Stopwatch stopwatch = Stopwatch()..start();
       await socket.flush();
+      // await until get the first response from server
+      // In other words, server responded
       await socket.first;
       stopwatch.stop();
 
       // Update response time
       setState(() {
-        _responseTime = 'Server response time: ${stopwatch.elapsedMilliseconds} ms';
+        _responseTime = 'Server Response Time: ${stopwatch.elapsedMilliseconds} ms';
       });
 
       // Close the socket
@@ -104,6 +110,7 @@ class _ResponseTimeState extends State<ResponseTime> {
       // Measure image download time
       stopwatch.reset();
       stopwatch.start();
+      // await until the image is being parsed or downloaded
       var response = await http.get(Uri.parse(imageUrl));
       stopwatch.stop();
 
@@ -111,7 +118,7 @@ class _ResponseTimeState extends State<ResponseTime> {
       if (response.statusCode == 200) {
         // Update download time
         setState(() {
-          _downloadTime = 'Image download time: ${stopwatch.elapsedMilliseconds} ms';
+          _downloadTime = 'Image Download Time: ${stopwatch.elapsedMilliseconds} ms';
           _image = Image.network(imageUrl);
         });
       } else {
@@ -120,7 +127,7 @@ class _ResponseTimeState extends State<ResponseTime> {
     } catch (e) {
       // Handle the error
       setState(() {
-        _responseTime = 'Error: $e';
+        _responseTime = '$e';
         _downloadTime = '';
         _image = null;
       });
