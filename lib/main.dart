@@ -35,41 +35,43 @@ class ResponseTime extends StatefulWidget {
 class ResponseTimeState extends State<ResponseTime> {
   String _responseTime = '';
   String _downloadTime = '';
-  Image? _image;  // Make _image nullable
+  Image? _image; // Make _image nullable
   final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        TextField(
-          controller: _controller,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'ENTER IMAGE URL',
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+            controller: _controller,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'ENTER IMAGE URL',
+            ),
           ),
-        ),
-        ElevatedButton(
-          onPressed: _getResponseTime,
-          child: const Text('Get Response and Download Time'),
-        ),
-        Text(
-          _responseTime,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+          ElevatedButton(
+            onPressed: _getResponseTime,
+            child: const Text('Get Response and Download Time'),
           ),
-        ),
-        Text(
-          _downloadTime,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+          Text(
+            _responseTime,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        _image != null ? _image! : Container(),
-      ],
+          Text(
+            _downloadTime,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          _image != null ? _image! : Container(),
+        ],
+      ),
     );
   }
 
@@ -101,7 +103,8 @@ class ResponseTimeState extends State<ResponseTime> {
 
       // Update response time
       setState(() {
-        _responseTime = 'Server Response Time: ${stopwatch.elapsedMilliseconds} ms';
+        _responseTime =
+            'Server Response Time: ${stopwatch.elapsedMilliseconds} ms';
       });
 
       // Close the socket
@@ -118,7 +121,8 @@ class ResponseTimeState extends State<ResponseTime> {
       if (response.statusCode == 200) {
         // Update download time
         setState(() {
-          _downloadTime = 'Image Download Time: ${stopwatch.elapsedMilliseconds} ms';
+          _downloadTime =
+              'Image Download Time: ${stopwatch.elapsedMilliseconds} ms';
           _image = Image.network(imageUrl);
         });
       } else {

@@ -1,4 +1,4 @@
-package example.com.test_app;
+package com.tendevs.server_response_time;
 
 import io.flutter.embedding.android.FlutterActivity;
 
